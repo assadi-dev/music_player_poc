@@ -45,6 +45,7 @@ dependencies:
   transparent_image: ^2.0.1
   audio_service: ^0.18.12
   audio_video_progress_bar: ^2.0.2
+  
 
 dev_dependencies:
   flutter_test:
