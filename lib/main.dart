@@ -1,9 +1,12 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:music_player_poc/notifiers/songs_provider.dart';
 import 'package:music_player_poc/services/song_handler.dart';
 import 'package:music_player_poc/ui/screens/home.screen.dart';
+import 'package:provider/provider.dart';
 
 SongHandler _songHandler = SongHandler();
 
@@ -20,7 +23,17 @@ Future<void> main() async {
     ),
   );
 
-  runApp(const MainApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => SongsProvider()..loadSongs(_songHandler),
+        ),
+      ],
+      child: const MainApp(),
+    ),
+  );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 }
 
 class MainApp extends StatelessWidget {

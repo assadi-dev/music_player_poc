@@ -54,9 +54,8 @@ class SongHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   }
 
   ///Fonction qui permet d'initialisé la music et de set up le player
-  Future<void> initSongs(List<MediaItem> songs) async {
+  Future<void> initSongs({required List<MediaItem> songs}) async {
     audioPlayer.playbackEventStream.listen(_broadcastState);
-
     final audioSource = songs.map(_createAudioSource).toList();
 
     await audioPlayer
