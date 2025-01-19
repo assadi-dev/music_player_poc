@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:music_player_poc/services/request_songs_permission.dart';
@@ -11,6 +13,10 @@ Future<List<MediaItem>> getSongs() async {
     final List<MediaItem> songs = [];
 
     final OnAudioQuery onAudioQuery = OnAudioQuery();
+
+    if (Platform.isIOS) {
+      await onAudioQuery.checkAndRequest();
+    }
 
     final List<SongModel> songModels = await onAudioQuery.querySongs();
 
