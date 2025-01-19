@@ -21,7 +21,7 @@ Future<List<MediaItem>> getSongs() async {
     if (Platform.isIOS) {
       await onAudioQuery.checkAndRequest();
     }
-    //var songModels = await pickMusicFolder();
+    // var songModels = await pickMusicFolder();
     final List<SongModel> songModels = await getSongsFromAssets();
     //final songModels = await onAudioQuery.querySongs();
 
@@ -121,7 +121,7 @@ final List<Song> _playlist = [
       albumName: 'Arcane League Of Legends',
       albumArtImagePath: "assets/images/cover.jpg",
       audioPath: 'assets/audios/audio_2.mp3',
-      duration: 158),
+      duration: 151),
   Song(
       id: 102,
       songName: 'Come Play',
@@ -174,7 +174,7 @@ Future<List<SongModel>> getSongsFromAssets() async {
       "displayNameWOExt": song.songName,
       "displayName": song.songName,
       "album": song.albumName,
-      "duration": 0,
+      "duration": song.duration,
       "_uri": localFile.uri.toString()
     };
 

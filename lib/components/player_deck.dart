@@ -37,14 +37,14 @@ class PlayerDeck extends StatelessWidget {
   Widget _buildCard(BuildContext context, MediaItem playingSong) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
+          //borderRadius: BorderRadius.circular(16.0),
+          ),
       elevation: isLast ? 0 : null,
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.only(bottom: 35),
       child: Stack(
         children: [
           // If not the last item, show artwork
-          if (!isLast) _buildArtwork(playingSong),
+          // if (!isLast) _buildArtwork(playingSong),
           // If not the last item, overlay the artwork with a semi-transparent container
           if (!isLast) _buildArtworkOverlay(),
           // Build the content of the card
@@ -76,7 +76,7 @@ class PlayerDeck extends StatelessWidget {
     return Positioned.fill(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0),
+          //borderRadius: BorderRadius.circular(16.0),
           color: Colors.black.withOpacity(0.5),
         ),
       ),
@@ -101,8 +101,9 @@ class PlayerDeck extends StatelessWidget {
     return ListTile(
       onTap: () {
         // Handle tap on the title
-        int index = songHandler.queue.value.indexOf(playingSong);
-        onTap(index);
+        songHandler.queue.value.indexOf(playingSong);
+
+        //onTap(index);
       },
       tileColor: isLast ? Colors.transparent : null,
       leading: isLast

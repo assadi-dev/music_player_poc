@@ -18,7 +18,7 @@ Future<MediaItem> songToMediaItem(SongModel song) async {
     return MediaItem(
       id: song.uri.toString(),
       artist: song.artist,
-      duration: Duration(milliseconds: song.duration!),
+      duration: Duration(seconds: song.duration!),
       displayDescription: song.id.toString(),
       title: song.title,
     );
