@@ -4,6 +4,7 @@ import 'package:music_player_poc/services/get_song_art.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 Future<MediaItem> songToMediaItem(SongModel song) async {
+  print(song);
   try {
     final Uri? art = await getSongArt(
       id: song.id,
