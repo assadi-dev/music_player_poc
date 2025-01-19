@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:music_player_poc/notifiers/songs_provider.dart';
 import 'package:music_player_poc/services/song_handler.dart';
-import 'package:music_player_poc/ui/screens/home.screen.dart';
+import 'package:music_player_poc/ui/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 SongHandler _songHandler = SongHandler();
