@@ -46,7 +46,7 @@ Future<List<SongModel>> pickMusicFolder() async {
   );
 
   if (result != null) {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
+    Directory appDocDir = await getApplicationSupportDirectory();
     Directory audioFolder = Directory("${appDocDir.path}/audios");
 
     // Vérifier et créer le dossier si nécessaire
@@ -89,7 +89,7 @@ Future<List<SongModel>> pickMusicFolder() async {
 }
 
 Future<File> saveFile(PlatformFile file) async {
-  var downloadDir = await getApplicationDocumentsDirectory();
+  var downloadDir = await getApplicationSupportDirectory();
   Directory audioFolder = Directory("${downloadDir.path}/audios");
   // Étape 3 : Vérifier si le dossier existe, sinon le créer
   if (!audioFolder.existsSync()) {
@@ -142,7 +142,7 @@ final List<Song> _playlist = [
 
 Future<List<SongModel>> getSongsFromAssets() async {
   List<SongModel> songs = [];
-  Directory appDocDir = await getApplicationDocumentsDirectory();
+  Directory appDocDir = await getApplicationSupportDirectory();
   Directory audioFolder = Directory("${appDocDir.path}/audios");
 
   // Créer le dossier si nécessaire
@@ -186,7 +186,7 @@ Future<List<SongModel>> getSongsFromAssets() async {
 
 Future<File> getArtwork() async {
   const String assetPath = "assets/images/cover.jpg";
-  Directory appDocDir = await getApplicationDocumentsDirectory();
+  Directory appDocDir = await getApplicationSupportDirectory();
   String audioFolder = "${appDocDir.path}/audios";
 
   final String path = "$audioFolder/cover.jpeg";

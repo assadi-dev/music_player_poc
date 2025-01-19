@@ -56,6 +56,12 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>NSDocumentsDirectoryUsageDescription</key>
+	<string>Cette application stocke et accède à des fichiers audio.</string>
+
+	<key>NSFileProtectionCompleteUntilFirstUserAuthentication</key>
+	<string></string>
+
 
 </dict>
 </plist>

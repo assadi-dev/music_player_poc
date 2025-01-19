@@ -36,7 +36,7 @@ class PlayerDeck extends StatelessWidget {
   // Build the main card widget
   Widget _buildCard(BuildContext context, MediaItem playingSong) {
     return Card(
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           //borderRadius: BorderRadius.circular(16.0),
           ),
       elevation: isLast ? 0 : null,
@@ -91,7 +91,7 @@ class PlayerDeck extends StatelessWidget {
         // Build the title section
         _buildTitle(context, playingSong),
         // Build the song progress section
-        _buildProgress(playingSong.duration!),
+        // _buildProgress(playingSong.duration!),
       ],
     );
   }
