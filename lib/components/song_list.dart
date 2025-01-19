@@ -76,7 +76,7 @@ class SongsList extends StatelessWidget {
   // Build a regular song item
   Widget _buildRegularSongItem(MediaItem song, MediaItem? playingSong) {
     return SongItem(
-      id: int.parse(song.displayDescription!),
+      id: int.parse(song.id),
       isPlaying: song == playingSong,
       title: formattedTitle(song.title),
       artist: song.artist,

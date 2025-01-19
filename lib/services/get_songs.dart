@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:music_player_poc/models/song_model.dart';
 import 'package:music_player_poc/services/request_songs_permission.dart';
 import 'package:music_player_poc/services/song_model_to_media_item.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 
 Future<List<MediaItem>> getSongs() async {
   try {
@@ -19,8 +21,9 @@ Future<List<MediaItem>> getSongs() async {
     if (Platform.isIOS) {
       await onAudioQuery.checkAndRequest();
     }
-    var savedFiles = await pickMusicFolder();
-    final List<SongModel> songModels = await onAudioQuery.querySongs();
+    var songModels = await pickMusicFolder();
+    //final List<SongModel> songModels = await getSongsFromAssets();
+    //final songModels = await onAudioQuery.querySongs();
 
     for (final SongModel songModel in songModels) {
       final MediaItem song = await songToMediaItem(songModel);
@@ -62,13 +65,14 @@ Future<List<SongModel>> pickMusicFolder() async {
         File copiedFile = await originalFile.copy(newFilePath);
 
         Map<dynamic, dynamic> songData = {
-          "id": DateTime.now().millisecondsSinceEpoch, // ID unique
+          "_id": DateTime.now().millisecondsSinceEpoch, // ID unique
           "title": originalFile.uri.pathSegments.last ??
               "Titre inconnu", // Nom du fichier
-          "data": copiedFile.path, // Chemin du fichier
+          "_data": copiedFile.path, // Chemin du fichier
           "artist": "Inconnu", // Valeur par défaut
           "album": "Inconnu",
-          "duration": 0, // Pas d'accès direct à la durée
+          "duration": 0,
+          "_uri": copiedFile.uri.toString(),
         };
 
         // Créer un objet SongModel pour chaque fichier copié
@@ -81,7 +85,6 @@ Future<List<SongModel>> pickMusicFolder() async {
     print("❌ Aucun fichier sélectionné.");
   }
 
-  print("🎵 ${songs.length} fichiers musicaux enregistrés !");
   return songs;
 }
 
@@ -100,4 +103,74 @@ Future<File> saveFile(PlatformFile file) async {
   var newFile = File(file.path!);
   await newFile.copy(path);
   return File(path);
+}
+
+final List<Song> _playlist = [
+  Song(
+      songName: 'Dynasties & Dystopia',
+      artistName: 'Denzel Curry, Gizzle, Bren Joy',
+      albumName: 'Arcane League Of Legends',
+      albumArtImagePath: "assets/images/cover.jpg",
+      audioPath: 'assets/audios/audio_1.mp3'),
+  Song(
+      songName: 'Playground (Baby Tate Remix) ',
+      artistName: 'Bea Miller',
+      albumName: 'Arcane League Of Legends',
+      albumArtImagePath: "assets/images/cover.jpg",
+      audioPath: 'assets/audios/audio_2.mp3'),
+  Song(
+      songName: 'Come Play',
+      artistName: 'Stray Kids, Young Miko, Tom Morello',
+      albumName: 'Arcane League Of Legends',
+      albumArtImagePath: "assets/images/cover.jpg",
+      audioPath: 'assets/audios/audio_3.mp3'),
+  Song(
+      songName: 'To Ashes and Blood',
+      artistName: 'Woodkid',
+      albumName: 'Arcane League Of Legends',
+      albumArtImagePath: "assets/images/cover.jpg",
+      audioPath: 'assets/audios/audio_4.mp3'),
+];
+
+Future<List<SongModel>> getSongsFromAssets() async {
+  List<SongModel> songs = [];
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  Directory audioFolder = Directory("${appDocDir.path}/audios");
+
+  // Créer le dossier si nécessaire
+  if (!audioFolder.existsSync()) {
+    audioFolder.createSync(recursive: true);
+  }
+
+  for (var song in _playlist) {
+    String fileName = "${song.songName}.mp3";
+    String assetPath =
+        song.audioPath; // Chemin dans les assets (ex: "assets/audios/song.mp3")
+    String localFilePath = "${audioFolder.path}/$fileName";
+
+    // Copier le fichier depuis les assets vers le stockage local
+    File localFile = File(localFilePath);
+    if (!localFile.existsSync()) {
+      ByteData data = await rootBundle.load(assetPath);
+      List<int> bytes = data.buffer.asUint8List();
+      await localFile.writeAsBytes(bytes);
+      print("✅ Fichier copié : $localFilePath");
+    }
+
+    Map<dynamic, dynamic> infoData = {
+      "_id": DateTime.now().millisecondsSinceEpoch, // ID unique
+      "title": song.songName,
+      "_data": localFilePath,
+      "artist": song.artistName,
+      "fileExtension": "mp3",
+      "displayNameWOExt": song.songName,
+      "displayName": song.songName,
+      "album": song.albumName,
+      "duration": 0,
+      "uri": localFile.uri
+    };
+
+    songs.add(SongModel(infoData));
+  }
+  return songs;
 }
