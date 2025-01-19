@@ -21,8 +21,8 @@ Future<List<MediaItem>> getSongs() async {
     if (Platform.isIOS) {
       await onAudioQuery.checkAndRequest();
     }
-    var songModels = await pickMusicFolder();
-    //final List<SongModel> songModels = await getSongsFromAssets();
+    //var songModels = await pickMusicFolder();
+    final List<SongModel> songModels = await getSongsFromAssets();
     //final songModels = await onAudioQuery.querySongs();
 
     for (final SongModel songModel in songModels) {
@@ -63,15 +63,15 @@ Future<List<SongModel>> pickMusicFolder() async {
             "${audioFolder.path}/${DateTime.now().millisecondsSinceEpoch}.$extension";
 
         File copiedFile = await originalFile.copy(newFilePath);
-
+        // final cover = await getArtwork();
         Map<dynamic, dynamic> songData = {
           "_id": DateTime.now().millisecondsSinceEpoch, // ID unique
           "title": originalFile.uri.pathSegments.last ??
               "Titre inconnu", // Nom du fichier
-          "_data": copiedFile.path, // Chemin du fichier
+          //"_data": cover.path, // Chemin du fichier
           "artist": "Inconnu", // Valeur par défaut
           "album": "Inconnu",
-          "duration": 0,
+          "duration": 197,
           "_uri": copiedFile.uri.toString(),
         };
 
@@ -107,29 +107,37 @@ Future<File> saveFile(PlatformFile file) async {
 
 final List<Song> _playlist = [
   Song(
+      id: 100,
       songName: 'Dynasties & Dystopia',
       artistName: 'Denzel Curry, Gizzle, Bren Joy',
       albumName: 'Arcane League Of Legends',
       albumArtImagePath: "assets/images/cover.jpg",
-      audioPath: 'assets/audios/audio_1.mp3'),
+      audioPath: 'assets/audios/audio_1.mp3',
+      duration: 178),
   Song(
+      id: 101,
       songName: 'Playground (Baby Tate Remix) ',
       artistName: 'Bea Miller',
       albumName: 'Arcane League Of Legends',
       albumArtImagePath: "assets/images/cover.jpg",
-      audioPath: 'assets/audios/audio_2.mp3'),
+      audioPath: 'assets/audios/audio_2.mp3',
+      duration: 158),
   Song(
+      id: 102,
       songName: 'Come Play',
       artistName: 'Stray Kids, Young Miko, Tom Morello',
       albumName: 'Arcane League Of Legends',
       albumArtImagePath: "assets/images/cover.jpg",
-      audioPath: 'assets/audios/audio_3.mp3'),
+      audioPath: 'assets/audios/audio_3.mp3',
+      duration: 162),
   Song(
+      id: 103,
       songName: 'To Ashes and Blood',
       artistName: 'Woodkid',
       albumName: 'Arcane League Of Legends',
       albumArtImagePath: "assets/images/cover.jpg",
-      audioPath: 'assets/audios/audio_4.mp3'),
+      audioPath: 'assets/audios/audio_4.mp3',
+      duration: 246),
 ];
 
 Future<List<SongModel>> getSongsFromAssets() async {
@@ -143,7 +151,7 @@ Future<List<SongModel>> getSongsFromAssets() async {
   }
 
   for (var song in _playlist) {
-    String fileName = "${song.songName}.mp3";
+    String fileName = "${song.id}.mp3";
     String assetPath =
         song.audioPath; // Chemin dans les assets (ex: "assets/audios/song.mp3")
     String localFilePath = "${audioFolder.path}/$fileName";
@@ -167,10 +175,28 @@ Future<List<SongModel>> getSongsFromAssets() async {
       "displayName": song.songName,
       "album": song.albumName,
       "duration": 0,
-      "uri": localFile.uri
+      "_uri": localFile.uri.toString()
     };
 
     songs.add(SongModel(infoData));
   }
+
   return songs;
+}
+
+Future<File> getArtwork() async {
+  const String assetPath = "assets/images/cover.jpg";
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  String audioFolder = "${appDocDir.path}/audios";
+
+  final String path = "$audioFolder/cover.jpeg";
+  File originalFile = File(path);
+  if (!originalFile.existsSync()) {
+    ByteData data = await rootBundle.load(assetPath);
+    List<int> bytes = data.buffer.asUint8List();
+    File copyFile = File(path);
+    copyFile.writeAsBytes(bytes);
+    return copyFile;
+  }
+  return originalFile;
 }

@@ -14,8 +14,7 @@ Future<MediaItem> songToMediaItem(SongModel song) async {
       size: 300,
     ); */
 
-    //final Uri artUri = File("assets/images/cover.jpg").uri;
-
+    //var artUri = Uri.file(song.data);
     return MediaItem(
       id: song.uri.toString(),
       artist: song.artist,
